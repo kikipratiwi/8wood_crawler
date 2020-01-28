@@ -25,6 +25,7 @@ class EightwoodspiderSpider(scrapy.Spider):
     def parse(self, response):
         """Function to process 8wood category results page"""
         product_category=response.meta["category_text"]
+        products=response.xpath("//div[@class='p-list']")
         
 
             
