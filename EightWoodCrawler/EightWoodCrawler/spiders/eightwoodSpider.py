@@ -37,6 +37,11 @@ class EightwoodspiderSpider(scrapy.Spider):
 
             XPATH_PAGINATION_LINK=".//ul[@class='pagination']//li[@class='next']//a/@data-page"
 
+            raw_product_name=product.xpath(XPATH_PRODUCT_NAME).extract()
+            raw_product_price=product.xpath(XPATH_PRODUCT_PRICE).extract()
+            raw_product_image_link=product.xpath(XPATH_PRODUCT_IMAGE_LINK).extract()
+            raw_product_link=product.xpath(XPATH_PRODUCT_LINK).extract()
+            raw_pagination_link=product.xpath(XPATH_PAGINATION_LINK).extract()
             
 
 
