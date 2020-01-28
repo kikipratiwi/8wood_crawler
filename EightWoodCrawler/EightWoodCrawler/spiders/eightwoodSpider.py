@@ -15,8 +15,7 @@ class EightwoodspiderSpider(scrapy.Spider):
             with open(os.path.join(os.path.dirname(__file__), "../resources/categories.csv")) as categories:
                 for category in csv.DictReader(categories):
                     category_text=category["category"]
-                    url="http://www.8wood.id/pakaian/".format(
-                        category_text)
+                    url="http://www.8wood.id/pakaian/".format(category_text)
                     # The meta is used to send our search text into the parser as metadata
                     yield scrapy.Request(url, callback = self.parse, meta = {"category_text": category_text})
 
