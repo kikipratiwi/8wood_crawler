@@ -12,7 +12,7 @@ class EightwoodcrawlerItem(scrapy.Item):
     # define the fields for your item here like:
     ProductTitle    = scrapy.Field()
     ProductCode     = scrapy.Field()
-    ProductCategory = scrapy.Field()
+    ProductCategory = scrapy.Field()git 
     ImageUrl        = scrapy.Field()
     OriginalPrice   = scrapy.Field()
     DetailPageUrl   = scrapy.Field()
