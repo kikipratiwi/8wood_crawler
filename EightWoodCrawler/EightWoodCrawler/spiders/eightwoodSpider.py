@@ -43,5 +43,22 @@ class EightwoodspiderSpider(scrapy.Spider):
             raw_product_link=product.xpath(XPATH_PRODUCT_LINK).extract()
             raw_pagination_link=product.xpath(XPATH_PAGINATION_LINK).extract()
             
+            # cleaning the data
+            product_name=''.join(raw_product_name).strip(
+            ) if raw_product_name else None
+            product_price=''.join(raw_product_price).strip(
+            ) if raw_product_price else None
+            product_image_link=''.join(raw_product_image_link).strip(
+            ) if raw_product_image_link else None
+            product_link=EightwoodspiderSpider.start_urls[0].join(raw_product_link).strip(
+            ) if raw_product_link else None
+            pagination_link=''.join(raw_pagination_link).strip(
+            ) if raw_pagination_link else None
 
-
+            yield {
+                'product_name': product_name,
+                'product_price': product_price,
+                'product_image_link': product_image_link,
+                'product_link': product_link,
+                'category': product_category
+            }
