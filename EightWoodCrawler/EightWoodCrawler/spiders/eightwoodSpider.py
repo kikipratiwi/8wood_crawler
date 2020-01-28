@@ -27,6 +27,13 @@ class EightwoodspiderSpider(scrapy.Spider):
         product_category=response.meta["category_text"]
         products=response.xpath("//div[@class='p-list']")
         
+        # Defining the XPaths
+        XPATH_PRODUCT_NAME=".//div[@class='desc']//h5/a/text()"
+        XPATH_PRODUCT_PRICE=".//div[@class='desc']//div[@class='price-box']//span[@class='regular-price']//span[@class='price']/text()"
+        XPATH_PRODUCT_IMAGE_LINK=".//div[@class='img']//a[@class='product-image-custom']//img[contains(@class,'imgThumProduct')]/@data-original"
+        XPATH_PRODUCT_LINK=".//div[@class='desc']//h5/a/@href"
+
+        XPATH_PAGINATION_LINK=".//ul[@class='pagination']//li[@class='next']//a/@data-page"
 
             
 
