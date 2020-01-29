@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # Crawling result
-/tmp
+tmp/
