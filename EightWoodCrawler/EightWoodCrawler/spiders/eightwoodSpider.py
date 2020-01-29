@@ -68,4 +68,4 @@ class EightwoodspiderSpider(scrapy.Spider):
 
         if next_page is not None:
             print('logging'+next_url)
-            yield response.follow(next_url, callback = self.parse)
+            yield response.follow(next_url, callback = self.parse, meta = {"category_text": product_category})
