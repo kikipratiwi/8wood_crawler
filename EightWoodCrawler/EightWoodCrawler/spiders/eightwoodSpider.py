@@ -7,7 +7,7 @@ import os
 class EightwoodspiderSpider(scrapy.Spider):
     name = 'eightwoodSpider'
     allowed_domains = ['8wood.id']
-    start_urls = ['http://www.8wood.id/']
+    start_urls = ['http://www.8wood.id']
 
     def start_requests(self):
             """Read category_text from categories file amd construct the URL"""
@@ -15,7 +15,7 @@ class EightwoodspiderSpider(scrapy.Spider):
             with open(os.path.join(os.path.dirname(__file__), "../resources/categories.csv")) as categories:
                 for category in csv.DictReader(categories):
                     category_text=category["category"]
-                    url="http://www.8wood.id/pakaian/"+category_text+"/"
+                    url=str(EightwoodspiderSpider.start_urls[0])+"/pakaian/"+category_text+"/"
                     # The meta is used to send our search text into the parser as metadata
                     yield scrapy.Request(url, callback = self.parse, meta = {"category_text": category_text})
 
@@ -46,7 +46,7 @@ class EightwoodspiderSpider(scrapy.Spider):
             ) if raw_product_price else None
             product_image_link=''.join(raw_product_image_link).strip(
             ) if raw_product_image_link else None
-            product_link=str(EightwoodspiderSpider.start_urls).join(raw_product_link).strip(
+            product_link=str(EightwoodspiderSpider.start_urls[0])+''.join(raw_product_link).strip(
             ) if raw_product_link else None
 
             yield {
@@ -64,8 +64,8 @@ class EightwoodspiderSpider(scrapy.Spider):
         ) if raw_pagination_link else None
 
         next_page = pagination_link
-        next_url = 'http://www.8wood.id' + next_page
+        next_url = str(EightwoodspiderSpider.start_urls[0]) + next_page
 
         if next_page is not None:
             print('logging'+next_url)
-            yield response.follow(next_url, callback = self.start_requests)
+            yield response.follow(next_url, callback = self.parse)
