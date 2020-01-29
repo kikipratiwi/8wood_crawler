@@ -58,3 +58,14 @@ class EightwoodspiderSpider(scrapy.Spider):
                 'category': product_category
             }
 
+        XPATH_PAGINATION_LINK=".//ul[@class='pagination']//li[@class='next']//a/@href"
+        raw_pagination_link=response.xpath(XPATH_PAGINATION_LINK).extract()
+        pagination_link=''.join(raw_pagination_link).strip(
+        ) if raw_pagination_link else None
+
+        next_page = pagination_link
+        next_url = 'http://www.8wood.id' + next_page
+
+        if next_page is not None:
+            print('logging'+next_url)
+            yield response.follow(next_url, callback = self.start_requests)
