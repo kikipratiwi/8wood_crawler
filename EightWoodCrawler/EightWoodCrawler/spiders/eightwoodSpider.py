@@ -28,36 +28,43 @@ class EightwoodspiderSpider(scrapy.Spider):
         
         # iterating over search results
         for product in products:
-            # Defining the XPaths
-            XPATH_PRODUCT_NAME=".//div[@class='desc']//h5/a/text()"
-            XPATH_PRODUCT_PRICE=".//div[@class='desc']//div[@class='price-box']//span[@class='regular-price']//span[@class='price']/text()"
-            XPATH_PRODUCT_IMAGE_LINK=".//div[@class='img']//a[@class='product-image-custom']//img[contains(@class,'imgThumProduct')]/@data-original"
-            XPATH_PRODUCT_LINK=".//div[@class='desc']//h5/a/@href"
+            # get produck outstock tag
+            XPATH_PRODUCT_OUTSTOCK_TAG=".//div[@class='img']//span[@class='outstock']"
+            is_onstock = len(product.xpath(XPATH_PRODUCT_OUTSTOCK_TAG)) == 0
 
-            raw_product_name=product.xpath(XPATH_PRODUCT_NAME).extract()
-            raw_product_price=product.xpath(XPATH_PRODUCT_PRICE).extract()
-            raw_product_image_link=product.xpath(XPATH_PRODUCT_IMAGE_LINK).extract()
-            raw_product_link=product.xpath(XPATH_PRODUCT_LINK).extract()
-            
-            # cleaning the data
-            product_name=''.join(raw_product_name).strip(
-            ) if raw_product_name else None
-            product_price=''.join(raw_product_price).strip(
-            ) if raw_product_price else None
-            product_image_link=''.join(raw_product_image_link).strip(
-            ) if raw_product_image_link else None
-            product_link=str(EightwoodspiderSpider.start_urls[0])+''.join(raw_product_link).strip(
-            ) if raw_product_link else None
+            # get data if product is onstock
+            if is_onstock: 
+                # Defining the XPaths
+                XPATH_PRODUCT_NAME=".//div[@class='desc']//h5/a/text()"
+                XPATH_PRODUCT_PRICE=".//div[@class='desc']//div[@class='price-box']//span[@class='regular-price']//span[@class='price']/text()"
+                XPATH_PRODUCT_IMAGE_LINK=".//div[@class='img']//a[@class='product-image-custom']//img[contains(@class,'imgThumProduct')]/@data-original"
+                XPATH_PRODUCT_LINK=".//div[@class='desc']//h5/a/@href"
 
-            yield {
-                'product_name': product_name,
-                'product_price': product_price,
-                'product_link': product_link,
-                'image_urls' : raw_product_image_link,
-                'images': product_name,
-                'category': product_category
-            }
+                raw_product_name=product.xpath(XPATH_PRODUCT_NAME).extract()
+                raw_product_price=product.xpath(XPATH_PRODUCT_PRICE).extract()
+                raw_product_image_link=product.xpath(XPATH_PRODUCT_IMAGE_LINK).extract()
+                raw_product_link=product.xpath(XPATH_PRODUCT_LINK).extract()
+                
+                # cleaning the data
+                product_name=''.join(raw_product_name).strip(
+                ) if raw_product_name else None
+                product_price=''.join(raw_product_price).strip(
+                ) if raw_product_price else None
+                product_image_link=''.join(raw_product_image_link).strip(
+                ) if raw_product_image_link else None
+                product_link=str(EightwoodspiderSpider.start_urls[0])+''.join(raw_product_link).strip(
+                ) if raw_product_link else None
 
+                yield {
+                    'product_name': product_name,
+                    'product_price': product_price,
+                    'product_link': product_link,
+                    'image_urls' : raw_product_image_link,
+                    'images': product_name,
+                    'category': product_category
+                }
+
+        #get pagination tag
         XPATH_PAGINATION_LINK=".//ul[@class='pagination']//li[@class='next']//a/@href"
         raw_pagination_link=response.xpath(XPATH_PAGINATION_LINK).extract()
         pagination_link=''.join(raw_pagination_link).strip(
@@ -66,6 +73,6 @@ class EightwoodspiderSpider(scrapy.Spider):
         next_page = pagination_link
         next_url = str(EightwoodspiderSpider.start_urls[0]) + next_page
 
+        #go to next page if it's available
         if next_page is not None:
-            print('logging'+next_url)
             yield response.follow(next_url, callback = self.parse, meta = {"category_text": product_category})
